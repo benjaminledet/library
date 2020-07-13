@@ -1,0 +1,114 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+#update_fastlane
+
+default_platform(:android)
+
+platform :android do
+
+desc "Publish a new version on github and an internal release on the google play store. You can specify upload_everything to true to upload all the medadata to the play store."
+  lane :deploy_internal do |options|
+   publish()
+   deploy(track:'internal', upload_everything:options[:upload_everything])
+  end
+
+desc "Publish a new version on github and an alpha release on the google play store. You can specify upload_everything to true to upload all the medadata to the play store."
+  lane :deploy_alpha do |options|
+   publish()
+   deploy(track:'alpha', upload_everything:options[:upload_everything])
+  end
+
+desc "Publish a new version on github and a beta release on the google play store. You can specify upload_everything to true to upload all the medadata to the play store."
+  lane :deploy_beta do |options|
+   publish()
+   deploy(track:'beta', upload_everything:options[:upload_everything])
+  end
+
+desc "Publish a new version on github and a production release on the google play store. You can specify upload_everything to true to upload all the medadata to the play store."
+  lane :deploy_production do |options|
+   publish()
+   deploy(track:'production', upload_everything:options[:upload_everything])
+  end
+
+desc "Publish a new version on github."
+  lane :publish do
+
+   is_releasable = analyze_commits(match: 'v*')
+
+    unless is_releasable
+      UI.message('Nothing to release')
+      next
+    end
+
+    next_version = lane_context[SharedValues::RELEASE_NEXT_VERSION]
+
+    android_set_version_code(
+      gradle_file: "buildSrc/src/main/java/Versions.kt"
+    )
+    android_set_version_name(
+      gradle_file: "buildSrc/src/main/java/Versions.kt",
+      version_name: "#{next_version}"
+    )
+
+    git_add(path: "buildSrc/src/main/java/Versions.kt")
+        git_commit(path: "buildSrc/src/main/java/Versions.kt", message: 'chore: version bump', skip_git_hooks: true)
+
+    notes = conventional_changelog(
+      commit_url: "https://github.com/benjaminledet/library/commit"
+    )
+
+    tag = "v#{next_version}"
+
+    add_git_tag(tag: tag)
+    
+        push_to_git_remote(
+          local_branch: "master",
+          remote_branch: "master"
+        )
+
+    set_github_release(
+      repository_name: "benjaminledet/library",
+      api_token: ENV["GITHUB_TOKEN"],
+      name: next_version,
+      tag_name: tag,
+      description: notes,
+      commitish: "master",
+      upload_assets: []
+    )
+  end
+
+  desc "Deploy a new version to the google play store. You should specify a 'track' option which can be one of : [production, beta, alpha, internal]"
+  lane :deploy do |options|
+    unless options[:track] == "production" || options[:track] == "beta" || options[:track] == "alpha" || options[:track] == "internal"
+     UI.message("No track to deploy to. If you want to deploy, you should specify a 'track' option which can be one of : [production, beta, alpha, internal]")
+     next
+     end
+     
+    validate_play_store_json_key(
+     json_key: './fastlane/google-play-console-api-key.json'
+    )
+    gradle(task: "clean")
+    gradle(task: 'bundle', build_type: 'release')
+    upload_to_play_store(
+      track: options[:track],
+      skip_upload_apk: true,
+      skip_upload_screenshots: options[:upload_everything] != true,
+      skip_upload_images: options[:upload_everything] != true,
+      skip_upload_metadata: options[:upload_everything] != true,
+      version_name: android_get_version_name(gradle_file: "buildSrc/src/main/java/Versions.kt"),
+      version_code: android_get_version_code(gradle_file: "buildSrc/src/main/java/Versions.kt")
+    )
+  end
+
+end

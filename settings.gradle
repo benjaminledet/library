@@ -1,0 +1,10 @@
+include ':java-rx2'
+include ':core'
+include ':java'
+include ':kotlin-callbacks'
+
+include 'samples:java-rx2'
+include 'samples:java'
+include 'samples:kotlin-rx2'
+include 'samples:kotlin'
+include 'samples:kotlin-callbacks'
