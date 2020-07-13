@@ -1,6 +1,6 @@
 # Library
 
-Description
+Check the samples to see complete examples of how library works.
 
 # Installation
 
