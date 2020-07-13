@@ -88,6 +88,11 @@ desc "Publish a new version on github."
     )
   end
 
+  desc "Run the gradle task publishAllPublicationsToGithubPackagesRepository"
+  lane :deploy_packages do |options|
+  	 gradle(task: "publishAllPublicationsToGithubPackagesRepository")
+  end
+
   desc "Deploy a new version to the google play store. You should specify a 'track' option which can be one of : [production, beta, alpha, internal]"
   lane :deploy do |options|
     unless options[:track] == "production" || options[:track] == "beta" || options[:track] == "alpha" || options[:track] == "internal"

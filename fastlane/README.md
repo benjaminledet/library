@@ -41,7 +41,11 @@ Publish a new version on github and a production release on the google play stor
 fastlane android publish
 ```
 Publish a new version on github.
-
+### android deploy_packages
+```
+fastlane android deploy_packages
+```
+Run the gradle task publishAllPublicationsToGithubPackagesRepository
 ### android deploy
 ```
 fastlane android deploy

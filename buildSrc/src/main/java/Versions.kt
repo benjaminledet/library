@@ -5,7 +5,7 @@ object Versions {
     const val compile = 30
 
     const val versionCode = 1
-    const val versionName = "0.0.5"
+    const val versionName = "0.0.1"
 
     const val kotlin = "1.3.72"
 
