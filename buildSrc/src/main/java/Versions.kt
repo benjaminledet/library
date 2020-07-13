@@ -1,6 +1,6 @@
 object Versions {
 
-    const val minimum = 23
+    const val minimum = 21
     const val target = 30
     const val compile = 30
 

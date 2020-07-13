@@ -14,7 +14,6 @@ android {
 
 dependencies {
     implementation(kotlin("stdlib-jdk7", org.jetbrains.kotlin.config.KotlinCompilerVersion.VERSION))
-    implementation(Dependencies.Android.core)
     implementation(platform(Dependencies.Kotlin.coroutinesBom))
     implementation(Dependencies.Kotlin.coroutinesCore)
     implementation(Dependencies.SquareUp.retrofit)
