@@ -36,6 +36,11 @@ Publish a new version on github and a beta release on the google play store. You
 fastlane android deploy_production
 ```
 Publish a new version on github and a production release on the google play store. You can specify upload_everything to true to upload all the medadata to the play store.
+### android publish_and_deploy_packages
+```
+fastlane android publish_and_deploy_packages
+```
+Publish a new version on github and run the gradle task publishAllPublicationsToGithubPackagesRepository
 ### android publish
 ```
 fastlane android publish

@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 plugins {
@@ -39,12 +38,8 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":java-rx2"))
 
-    implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-
     implementation(Dependencies.Android.appCompat)
     implementation(Dependencies.Android.core)
-
-    implementation(Dependencies.Kotlin.coroutinesRx2)
 
     implementation(Dependencies.ReactiveX.java)
     implementation(Dependencies.ReactiveX.android)
