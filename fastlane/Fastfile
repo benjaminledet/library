@@ -41,6 +41,12 @@ desc "Publish a new version on github and a production release on the google pla
    deploy(track:'production', upload_everything:options[:upload_everything])
   end
 
+   desc "Publish a new version on github and run the gradle task publishAllPublicationsToGithubPackagesRepository"
+  lane :publish_and_deploy_packages do |options|
+  	 publish()
+  	 deploy_packages()
+  end
+
 desc "Publish a new version on github."
   lane :publish do
 
